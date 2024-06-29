@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
+
+	"github.com/takumi616/english-vocabularies-database/infrastructure"
 )
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
@@ -12,13 +13,11 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/test", testHandler)
 
-	server := &http.Server{
-		Addr:    ":" + os.Getenv("APP_CONTAINER_PORT"),
-		Handler: mux,
-	}
+	port := os.Getenv("APP_CONTAINER_PORT")
 
-	log.Fatal(server.ListenAndServe())
+	mux := infrastructure.NewRouting()
+
+	httpServer := infrastructure.NewHttpServer(port, mux)
+	httpServer.Run()
 }
