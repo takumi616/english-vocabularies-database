@@ -1,0 +1,11 @@
+services:
+  golang:
+    image: golang
+    build: .
+    environment:
+      - APP_CONTAINER_PORT=${APP_CONTAINER_PORT}
+    volumes:
+      - .:/app
+    ports:
+      - "${APP_LOCAL_PORT}:${APP_CONTAINER_PORT}"
+
