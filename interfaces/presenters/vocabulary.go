@@ -1,5 +1,11 @@
 package presenters
 
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+)
+
 type VocabularyPresenter struct {
 }
 
@@ -7,15 +13,13 @@ func NewVocabularyPresenter() *VocabularyPresenter {
 	return &VocabularyPresenter{}
 }
 
-type VocabularyOutputPort interface {
-	WriteResponse(vocabularyID int64) error
-	WriteError(errMsg error) error
+func (vp *VocabularyPresenter) WriteResponse(ctx context.Context, w http.ResponseWriter, vocabularyID int64) error {
+	rsp := struct {
+		VocabularyID int64 `json:"vocabulary_id"`
+	}{VocabularyID: vocabularyID}
+	return json.NewEncoder(w).Encode(rsp)
 }
 
-func (vp *VocabularyPresenter) WriteResponse(vocabularyID int64) error {
-	return nil
-}
-
-func (vp *VocabularyPresenter) WriteError(errMsg error) error {
+func (vp *VocabularyPresenter) WriteError(ctx context.Context, w http.ResponseWriter, errMsg error) error {
 	return nil
 }

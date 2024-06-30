@@ -2,6 +2,7 @@ package interactors
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/takumi616/english-vocabularies-database/entities"
 	"github.com/takumi616/english-vocabularies-database/interfaces/gateways"
@@ -25,9 +26,9 @@ func NewVocabularyInteractor(gateway *gateways.VocabularyGateway, presenter *pre
 	}
 }
 
-func (vi *VocabularyInteractor) AddNewVocabulary(ctx context.Context, vocabulary *entities.Vocabulary) error {
+func (vi *VocabularyInteractor) AddNewVocabulary(ctx context.Context, w http.ResponseWriter, vocabulary *entities.Vocabulary) error {
 	addedID, _ := vi.Repo.AddNewVocabulary(ctx, vocabulary)
 	//Call outputPort
-	err := vi.OutputPort.WriteResponse(addedID)
+	err := vi.OutputPort.WriteResponse(ctx, w, addedID)
 	return err
 }

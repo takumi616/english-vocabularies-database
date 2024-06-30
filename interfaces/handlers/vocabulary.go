@@ -32,7 +32,7 @@ func (vh *VocabularyHandler) AddNewVocabulary(w http.ResponseWriter, r *http.Req
 	}
 
 	vocabulary := entities.NewVocabulary(req.Title, req.Example)
-	err := vh.InputPorts.AddNewVocabulary(r.Context(), vocabulary)
+	err := vh.InputPorts.AddNewVocabulary(r.Context(), w, vocabulary)
 
 	log.Println(err)
 }

@@ -12,7 +12,6 @@ import (
 
 func InitDatabase(ctx context.Context, cfg *Config) (*gorm.DB, error) {
 	dataSourceName := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", cfg.Host, cfg.Port, cfg.User, cfg.PassWord, cfg.DbName, cfg.Sslmode)
-	log.Printf("db info: %s", dataSourceName)
 	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{})
 	if err != nil {
 		log.Printf("Failed to open postgresql: %v", err)
