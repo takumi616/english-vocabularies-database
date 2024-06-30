@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/takumi616/english-vocabularies-database/infrastructure"
-	"github.com/takumi616/english-vocabularies-database/infrastructure/postgres"
 	"github.com/takumi616/english-vocabularies-database/interfaces/gateways"
 	"github.com/takumi616/english-vocabularies-database/interfaces/handlers"
+	"github.com/takumi616/english-vocabularies-database/interfaces/presenters"
 	"github.com/takumi616/english-vocabularies-database/usecases/interactors"
 )
 
@@ -15,14 +15,18 @@ func main() {
 
 	config, _ := infrastructure.NewConfig()
 
-	//postgres := &postgres.Postgres{DbHandle: "dummy db"}
-	postgres, _ := postgres.Init(ctx, config)
+	db, _ := infrastructure.InitDatabase(ctx, config)
 
-	gateway := &gateways.VocabularyGateway{Persistence: postgres}
+	//Initialize gateway of interfaces layer
+	vocabularyGateway := gateways.NewVocabularyGateway(db)
+	//Initialize presenter of interfaces layer
+	vocabularyPresenter := presenters.NewVocabularyPresenter()
 
-	vocabularyInteractor := &interactors.VocabularyInteractor{Repo: gateway}
+	//Initialize interactor of usecases layer
+	vocabularyInteractor := interactors.NewVocabularyInteractor(vocabularyGateway, vocabularyPresenter)
 
-	vocabularyHandler := &handlers.VocabularyHandler{InputPorts: vocabularyInteractor}
+	//Initialize handler of interfaces layer
+	vocabularyHandler := handlers.NewVocabularyHandler(vocabularyInteractor)
 
 	routing := infrastructure.NewRouting(vocabularyHandler)
 	mux := routing.Setup()
