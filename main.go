@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"os"
+	"context"
 
 	"github.com/takumi616/english-vocabularies-database/infrastructure"
 	"github.com/takumi616/english-vocabularies-database/infrastructure/postgres"
@@ -12,15 +10,13 @@ import (
 	"github.com/takumi616/english-vocabularies-database/usecases/interactors"
 )
 
-func testHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "test handler")
-}
-
 func main() {
+	ctx := context.Background()
 
-	port := os.Getenv("APP_CONTAINER_PORT")
+	config, _ := infrastructure.NewConfig()
 
-	postgres := &postgres.Postgres{DbHandle: "dummy db"}
+	//postgres := &postgres.Postgres{DbHandle: "dummy db"}
+	postgres, _ := postgres.Init(ctx, config)
 
 	gateway := &gateways.VocabularyGateway{Persistence: postgres}
 
@@ -31,6 +27,6 @@ func main() {
 	routing := infrastructure.NewRouting(vocabularyHandler)
 	mux := routing.Setup()
 
-	httpServer := infrastructure.NewHttpServer(port, mux)
+	httpServer := infrastructure.NewHttpServer(config.AppPort, mux)
 	httpServer.Run()
 }

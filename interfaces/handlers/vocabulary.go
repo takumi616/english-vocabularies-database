@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"io"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -13,16 +13,17 @@ type VocabularyHandler struct {
 }
 
 func (vh *VocabularyHandler) AddNewVocabulary(w http.ResponseWriter, r *http.Request) {
-	reqBody, err := io.ReadAll(r.Body)
-	if err != nil {
-		log.Printf("failed to add new vocabulary: %v", err.Error())
+	var req struct {
+		Title   string `json:"title"`
+		Example string `json:"example"`
 	}
 
-	reqTitle := "title"
-	reqExample := "example"
+	//Convert json http request data into go struct
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Fatalf("failed to decode request body: %v", err)
+	}
 
-	addedId, _ := vh.InputPorts.AddNewVocabulary(reqTitle, reqExample)
+	addedId, _ := vh.InputPorts.AddNewVocabulary(req.Title, req.Example)
 
-	w.Write(reqBody)
 	log.Println(addedId)
 }
