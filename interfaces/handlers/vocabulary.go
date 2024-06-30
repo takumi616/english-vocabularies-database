@@ -5,11 +5,19 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/takumi616/english-vocabularies-database/usecases/inputPorts"
+	"github.com/takumi616/english-vocabularies-database/entities"
+	"github.com/takumi616/english-vocabularies-database/usecases/interactors"
+	"github.com/takumi616/english-vocabularies-database/usecases/ports"
 )
 
 type VocabularyHandler struct {
-	InputPorts inputPorts.VocabularyInputPort
+	InputPorts ports.VocabularyInputPort
+}
+
+func NewVocabularyHandler(interactor *interactors.VocabularyInteractor) *VocabularyHandler {
+	return &VocabularyHandler{
+		InputPorts: interactor,
+	}
 }
 
 func (vh *VocabularyHandler) AddNewVocabulary(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +31,8 @@ func (vh *VocabularyHandler) AddNewVocabulary(w http.ResponseWriter, r *http.Req
 		log.Fatalf("failed to decode request body: %v", err)
 	}
 
-	addedId, _ := vh.InputPorts.AddNewVocabulary(req.Title, req.Example)
+	vocabulary := entities.NewVocabulary(req.Title, req.Example)
+	err := vh.InputPorts.AddNewVocabulary(r.Context(), vocabulary)
 
-	log.Println(addedId)
+	log.Println(err)
 }

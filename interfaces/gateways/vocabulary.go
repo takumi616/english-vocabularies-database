@@ -1,15 +1,24 @@
 package gateways
 
 import (
+	"context"
+
 	"github.com/takumi616/english-vocabularies-database/entities"
-	"github.com/takumi616/english-vocabularies-database/interfaces/persistences"
+	"gorm.io/gorm"
 )
 
 type VocabularyGateway struct {
-	//interface to infrastructure DB
-	Persistence persistences.VocabularyPersistence
+	Db *gorm.DB
 }
 
-func (vg *VocabularyGateway) AddNewVocabulary(vocabulary *entities.Vocabulary) (int64, error) {
-	return vg.Persistence.Add(vocabulary)
+func NewVocabularyGateway(db *gorm.DB) *VocabularyGateway {
+	return &VocabularyGateway{
+		Db: db,
+	}
+}
+
+func (vg *VocabularyGateway) AddNewVocabulary(ctx context.Context, vocabulary *entities.Vocabulary) (int64, error) {
+	//DB proccess
+
+	return 1, nil
 }
