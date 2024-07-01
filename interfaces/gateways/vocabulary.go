@@ -4,21 +4,16 @@ import (
 	"context"
 
 	"github.com/takumi616/english-vocabularies-database/entities"
-	"gorm.io/gorm"
 )
 
 type VocabularyGateway struct {
-	Db *gorm.DB
-}
-
-func NewVocabularyGateway(db *gorm.DB) *VocabularyGateway {
-	return &VocabularyGateway{
-		Db: db,
-	}
+	Postgres Postgres
 }
 
 func (vg *VocabularyGateway) AddNewVocabulary(ctx context.Context, vocabulary *entities.Vocabulary) (int64, error) {
-	//DB proccess
+	db, _ := vg.Postgres.InitDatabase(ctx)
 
+	tx := db.Create(vocabulary)
+	tx.Commit()
 	return 1, nil
 }

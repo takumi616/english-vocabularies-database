@@ -10,8 +10,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitDatabase(ctx context.Context, cfg *Config) (*gorm.DB, error) {
-	dataSourceName := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", cfg.Host, cfg.Port, cfg.User, cfg.PassWord, cfg.DbName, cfg.Sslmode)
+type Postgres struct {
+	PgConfig *PgConfig
+}
+
+func (p *Postgres) InitDatabase(ctx context.Context) (*gorm.DB, error) {
+	dataSourceName := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", p.PgConfig.Host, p.PgConfig.Port, p.PgConfig.User, p.PgConfig.PassWord, p.PgConfig.DbName, p.PgConfig.Sslmode)
 	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{})
 	if err != nil {
 		log.Printf("Failed to open postgresql: %v", err)

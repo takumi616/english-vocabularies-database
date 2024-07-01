@@ -9,10 +9,6 @@ import (
 type VocabularyPresenter struct {
 }
 
-func NewVocabularyPresenter() *VocabularyPresenter {
-	return &VocabularyPresenter{}
-}
-
 func (vp *VocabularyPresenter) WriteResponse(ctx context.Context, w http.ResponseWriter, vocabularyID int64) error {
 	rsp := struct {
 		VocabularyID int64 `json:"vocabulary_id"`
