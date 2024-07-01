@@ -10,13 +10,6 @@ type HttpServer struct {
 	ServeMux *http.ServeMux
 }
 
-func NewHttpServer(port string, mux *http.ServeMux) *HttpServer {
-	return &HttpServer{
-		Port:     port,
-		ServeMux: mux,
-	}
-}
-
 func (hs *HttpServer) Run() {
 	server := &http.Server{
 		Addr:    ":" + hs.Port,

@@ -6,18 +6,11 @@ import (
 	"net/http"
 
 	"github.com/takumi616/english-vocabularies-database/entities"
-	"github.com/takumi616/english-vocabularies-database/usecases/interactors"
 	"github.com/takumi616/english-vocabularies-database/usecases/ports"
 )
 
 type VocabularyHandler struct {
 	InputPorts ports.VocabularyInputPort
-}
-
-func NewVocabularyHandler(interactor *interactors.VocabularyInteractor) *VocabularyHandler {
-	return &VocabularyHandler{
-		InputPorts: interactor,
-	}
 }
 
 func (vh *VocabularyHandler) AddNewVocabulary(w http.ResponseWriter, r *http.Request) {
